@@ -57,14 +57,14 @@ app.get('/search', (req, res) => {
     })
 });
 
-// app.post('/articles', (req, res) => {
-//     let query = `INSERT INTO articles SET ?`;
-//
-//     db.query(query, req.body, (err, result) => {
-//         if (err) { return res.status(500).send(err) }
-//         else { res.send('Article added') }
-//     })
-// });
+app.post('/articles', (req, res) => {
+    let query = `INSERT INTO articles SET ?`;
+
+    db.query(query, req.body, (err, result) => {
+        if (err) { return res.status(500).send(err) }
+        else { res.send('Article added') }
+    })
+});
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}...`);
