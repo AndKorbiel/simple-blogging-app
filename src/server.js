@@ -44,19 +44,19 @@ app.get('/articles', (req, res) => {
         else { res.json(result) }
     })
 });
-//
-// app.get('/search', (req, res) => {
-//     let searchText = req.query.q;
-//     let query = `SELECT * FROM articles WHERE title = ?`;
-//
-//     if (!searchText) { query = `SELECT * FROM articles`}
-//
-//     db.query(query, searchText, (err, result) => {
-//         if (err) { return res.status(500).send(err) }
-//         else { res.json(result) }
-//     })
-// });
-//
+
+app.get('/search', (req, res) => {
+    let searchText = req.query.q;
+    let query = `SELECT * FROM articles WHERE title = ?`;
+
+    if (!searchText) { query = `SELECT * FROM articles`}
+
+    db.query(query, searchText, (err, result) => {
+        if (err) { return res.status(500).send(err) }
+        else { res.json(result) }
+    })
+});
+
 // app.post('/articles', (req, res) => {
 //     let query = `INSERT INTO articles SET ?`;
 //

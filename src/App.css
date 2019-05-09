@@ -6,7 +6,11 @@ body {
   background: #f5f5f5;
   padding: 5px 10px;
   border-radius: 6px;
-  margin-bottom: 10px;
+  margin: 5px;
+}
+
+.article.col-md-3 {
+  max-width: calc(25% - 10px);
 }
 
 .post-response {
@@ -14,7 +18,7 @@ body {
   color: #089600;
 }
 
-.post-error {
+.notification {
   font-size: 1.2em;
   color: red;
 }
