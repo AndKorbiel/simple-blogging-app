@@ -66,6 +66,28 @@ app.post('/articles', (req, res) => {
     })
 });
 
+app.post('/register', (req, res) => {
+    let query = `INSERT INTO users SET ?`;
+
+    db.query(query, req.body, (err, result) => {
+        if (err) { return res.status(500).send(err) }
+        else { res.send('User regisered') }
+    })
+});
+
+app.post('/login', (req, res) => {
+    let user = req.body.user;
+    let password = req.body.password;
+
+    console.log(user, password)
+    let query = `SELECT * FROM users WHERE user = ?  AND password = ?`;
+
+    db.query(query, [user, password], (err, result) => {
+        if (err) { return res.status(500).send(err) }
+        else { res.json(result) }
+    })
+});
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}...`);
 });

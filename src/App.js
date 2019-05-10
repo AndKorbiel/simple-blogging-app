@@ -14,7 +14,11 @@ class App extends Component {
         notification: '',
         articlesInDatabase: [],
         searchInput: '',
-        displayMode: ''
+        displayMode: '',
+        status: 'Not logged in',
+        user: '',
+        password: '',
+        currentLogRegAction: 'Register'
     };
 
     handleChange = (e) => {
@@ -112,11 +116,86 @@ class App extends Component {
             .catch(error => console.error('Error:', error));
     };
 
+    changeAction = () => {
+        let currentAction = this.state.currentLogRegAction;
+
+        if (currentAction == 'Register') {
+            currentAction = 'Login';
+
+        }
+        else {
+            currentAction = 'Register';
+        }
+        this.setState({
+            currentLogRegAction: currentAction
+        });
+    };
+
+    register = () => {
+        let registerData = {user: this.state.user, password: this.state.password}
+
+        if (registerData.user == '' || registerData.password == '') {
+            this.setState({
+                notification: 'Please fill all matandory fields'
+            })
+        }
+        else {
+            fetch('http://localhost:8080/register', {
+                method: 'POST',
+                body: JSON.stringify(registerData),
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then((res) => {
+                    if (res.status == 200) {
+                        this.setState({
+                            notification: `User: ${this.state.title} is now registered`
+                        })
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    };
+
+    login = () => {
+        let user = this.state.user;
+        let password = this.state.password;
+
+        fetch('http://localhost:8080/login', {
+            method: 'POST',
+            body: JSON.stringify({user: user, password: password}),
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then((myJSON) => {
+                if (myJSON.length <= 0) {
+                    this.setState({
+                        notification: 'There isn\'t such user in database',
+                        articlesInDatabase: []
+                    })
+                }
+                else {
+                    this.setState({
+                        notification: 'You have logged in!',
+                        status: 'Logged in as: '+user
+                    })
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    };
+
   render() {
-      const { displayMode, title, text, notification, articlesInDatabase} = this.state;
+      const { displayMode, title, text, notification, articlesInDatabase, status, user, password, currentLogRegAction } = this.state;
       return (
           <div className="App">
-              <TopBar />
+              <TopBar status={status} handleChange={this.handleChange} register={this.register} login={this.login} user={user} password={password} changeAction={this.changeAction} currentLogRegAction={currentLogRegAction} />
               <div className="container">
                   <div className="row">
                       <Reader getData={this.getData} handleChange={this.handleChange} search={this.searchData} get={this.getData}/>
