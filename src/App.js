@@ -15,6 +15,7 @@ class App extends Component {
         articlesInDatabase: [],
         searchInput: '',
         displayMode: '',
+        loggedIn: false,
         status: 'Not logged in',
         user: '',
         password: '',
@@ -37,7 +38,13 @@ class App extends Component {
     postArticle = () => {
         let postedData = {title: this.state.title, content: this.state.text};
 
-        if (postedData.title == '' || postedData.content == '') {
+        if (!this.state.loggedIn) {
+            this.setState({
+                notification: 'Please login to post article'
+            })
+        }
+
+        else if (postedData.title == '' || postedData.content == '') {
             this.setState({
                 notification: 'Please fill all matandory fields'
             })
@@ -151,7 +158,7 @@ class App extends Component {
                 .then((res) => {
                     if (res.status == 200) {
                         this.setState({
-                            notification: `User: ${this.state.title} is now registered`
+                            notification: `User: ${this.state.user} is now registered`
                         })
                     }
                 })
@@ -177,13 +184,14 @@ class App extends Component {
             .then((myJSON) => {
                 if (myJSON.length <= 0) {
                     this.setState({
-                        notification: 'There isn\'t such user in database',
+                        notification: 'Wrong username or password',
                         articlesInDatabase: []
                     })
                 }
                 else {
                     this.setState({
                         notification: 'You have logged in!',
+                        loggedIn: true,
                         status: 'Logged in as: '+user
                     })
                 }
@@ -192,14 +200,14 @@ class App extends Component {
     };
 
   render() {
-      const { displayMode, title, text, notification, articlesInDatabase, status, user, password, currentLogRegAction } = this.state;
+      const { displayMode, title, text, notification, articlesInDatabase, status, user, password, currentLogRegAction, loggedIn } = this.state;
       return (
           <div className="App">
               <TopBar status={status} handleChange={this.handleChange} register={this.register} login={this.login} user={user} password={password} changeAction={this.changeAction} currentLogRegAction={currentLogRegAction} />
               <div className="container">
                   <div className="row">
                       <Reader getData={this.getData} handleChange={this.handleChange} search={this.searchData} get={this.getData}/>
-                      <Writer postArticle={this.postArticle} handleChange={this.handleChange} title={title} text={text} />
+                      <Writer postArticle={this.postArticle} handleChange={this.handleChange} title={title} text={text} loggedIn={loggedIn} />
                   </div>
                 <div className="row">
                     <Display displayMode={displayMode} title={title} text={text} notification={notification} articlesInDatabase={articlesInDatabase}  />

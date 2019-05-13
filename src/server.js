@@ -71,7 +71,7 @@ app.post('/register', (req, res) => {
 
     db.query(query, req.body, (err, result) => {
         if (err) { return res.status(500).send(err) }
-        else { res.send('User regisered') }
+        else { res.send('User registered') }
     })
 });
 
