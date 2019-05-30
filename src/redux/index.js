@@ -2,6 +2,11 @@ import { applyMiddleware, createStore } from 'redux';
 import axios from 'axios';
 import thunk from 'redux-thunk';
 
+const GET_DATA = 'GET_DATA';
+const GET_DATA_ERROR = 'GET_DATA_ERROR';
+const HANDLE_CHANGE = 'HANDLE_CHANGE';
+const SEARCH = 'SEARCH';
+
 const initialState = {
     title: '',
     text: '',
@@ -18,21 +23,54 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case  'GET_DATA' :
+        case  GET_DATA :
             return { ...state, articlesInDatabase: action.payload, notification: 'Data fetched!', status: 'Data fetched' };
-            break;
-        case 'GET_DATA_ERROR' :
+        case GET_DATA_ERROR :
             return { ...state, notification: action.payload};
-            break;
-        case 'HANDLE_CHANGE' :
+        case HANDLE_CHANGE :
             return { ...state, notification: action.payload, searchInput: action.payload};
-            break;
-        case 'SEARCH' :
+        case SEARCH :
             return {...state, articlesInDatabase: action.payload};
         default:
             return state;
     }
 };
+
+export const getData = (payload) => {
+    return {
+        type: GET_DATA, payload
+    }
+}
+
+export const getDataError = (payload) => {
+    return {
+        type: GET_DATA_ERROR, payload
+    }
+}
+
+export const handleChange = () => {
+    return {
+        type: HANDLE_CHANGE
+    }
+}
+
+export const search = () => {
+    return {
+        type: SEARCH
+    }
+}
+
+export const getDataEffect = () => {
+    return (dispatch) => {
+        axios.get('http://localhost:8080/articles')
+                .then((res) => {
+                    dispatch(getData(res.data));
+                })
+                .catch((err) => {
+                    dispatch(getDataError(err));
+                })
+    }
+}
 
 const middleware = applyMiddleware(thunk);
 const store = createStore(reducer, middleware);

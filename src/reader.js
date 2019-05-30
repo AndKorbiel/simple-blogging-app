@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import "./App.css";
 import axios from "axios";
+import { getDataEffect } from './redux';
 
 class Reader extends  Component {
     render() {
@@ -31,16 +32,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getData: ()=> {
-            const action = { type: 'GET_DATA'};
-            axios.get('http://localhost:8080/articles')
-                .then((res) => {
-                    dispatch({type: 'GET_DATA', payload: res.data});
-                })
-                .catch((err) => {
-                    dispatch({type: 'GET_DATA_ERROR', payload: err})
-                })
-        },
+        getData: ()=> dispatch(getDataEffect()),
         handleChange: (e) => {
             const action = {type: 'HANDLE_CHANGE'};
             let value = e.target.value;
