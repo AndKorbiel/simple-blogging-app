@@ -6,6 +6,9 @@ const GET_DATA = 'GET_DATA';
 const GET_DATA_ERROR = 'GET_DATA_ERROR';
 const HANDLE_CHANGE = 'HANDLE_CHANGE';
 const SEARCH = 'SEARCH';
+const SEARCH_EMPTY = 'SEARCH_EMPTY';
+const POST_ARTICLE = 'POST_ARTICLE';
+const POST_ARTICLE_ERROR = 'POST_ARTICLE_ERROR';
 
 const initialState = {
     title: '',
@@ -14,7 +17,7 @@ const initialState = {
     articlesInDatabase: [],
     searchInput: '',
     displayMode: '',
-    loggedIn: false,
+    loggedIn: true,
     status: 'Not logged in',
     user: '',
     password: '',
@@ -31,6 +34,12 @@ const reducer = (state = initialState, action) => {
             return { ...state, notification: action.payload, searchInput: action.payload};
         case SEARCH :
             return {...state, articlesInDatabase: action.payload};
+        case SEARCH_EMPTY :
+            return {...state, notification: 'There isn\'t such article in our database'};
+        case POST_ARTICLE :
+            return {...state, notification: 'Article posted', articlesInDatabase: action.payload};
+        case POST_ARTICLE_ERROR :
+            return {...state, notification: 'Please fill all matandory fileds' };
         default:
             return state;
     }
@@ -40,25 +49,43 @@ export const getData = (payload) => {
     return {
         type: GET_DATA, payload
     }
-}
+};
 
 export const getDataError = (payload) => {
     return {
         type: GET_DATA_ERROR, payload
     }
-}
+};
 
-export const handleChange = () => {
+export const handleChange = (payload) => {
     return {
-        type: HANDLE_CHANGE
+        type: HANDLE_CHANGE, payload
     }
-}
+};
 
-export const search = () => {
+export const search = (payload) => {
     return {
-        type: SEARCH
+        type: SEARCH, payload
     }
-}
+};
+
+export const searchEmpty = () => {
+    return {
+        type: SEARCH_EMPTY
+    }
+};
+
+export const postArticle = (payload) => {
+    return {
+        type: POST_ARTICLE, payload
+    }
+};
+
+export const postArticleError = () => {
+    return {
+        type: POST_ARTICLE_ERROR
+    }
+};
 
 export const getDataEffect = () => {
     return (dispatch) => {
@@ -70,58 +97,73 @@ export const getDataEffect = () => {
                     dispatch(getDataError(err));
                 })
     }
-}
+};
+
+export const handleChangeEffect = (value) => {
+    return (dispatch) => { dispatch(handleChange(value)) }
+};
+
+export const searchEffect = (searchText) => {
+    return (dispatch) => {
+
+        axios.get('http://localhost:8080/search'+'?q=' + searchText)
+            .then((res) => {
+                window.location = '#search' +'?q=' + searchText;
+                if (res.length <= 0) {
+                    dispatch(dispatch(searchEmpty()));
+                }
+                else {
+                    dispatch(dispatch(search(res.data)));
+                }
+            })
+            .catch((err) => {
+                dispatch(getDataError(err));
+            })
+    }
+};
+
+export const postArticleEffect = (postedData) => {
+    return (dispatch) => {
+
+
+        // if (!this.state.loggedIn) {
+        //     this.setState({
+        //         notification: 'Please login to post article'
+        //     })
+        // }
+        //
+        console.log(postedData)
+        if (postedData.title == '' || postedData.text == '') {
+            dispatch(dispatch(postArticleError()))
+        }
+        // }
+
+        // else {
+            fetch('http://localhost:8080/articles', {
+                method: 'POST',
+                body: JSON.stringify(postedData),
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then((res) => {
+                    if (res.status == 200) {
+                        dispatch(dispatch(postArticle(res.data)))
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        // }
+    }
+};
+
 
 const middleware = applyMiddleware(thunk);
 const store = createStore(reducer, middleware);
 
 
 export default store;
-//
 
-
-//
-
-//
-// postArticle = () => {
-//     let postedData = {title: this.state.title, content: this.state.text};
-//
-//     if (!this.state.loggedIn) {
-//         this.setState({
-//             notification: 'Please login to post article'
-//         })
-//     }
-//
-//     else if (postedData.title == '' || postedData.content == '') {
-//         this.setState({
-//             notification: 'Please fill all matandory fields'
-//         })
-//     }
-//
-//     else {
-//         fetch('http://localhost:8080/articles', {
-//             method: 'POST',
-//             body: JSON.stringify(postedData),
-//             headers:{
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             }
-//         })
-//             .then((res) => {
-//                 if (res.status == 200) {
-//                     this.setState({
-//                         notification: `Article: ${this.state.title} added into database`
-//                     })
-//                 }
-//             })
-//             .catch(error => console.error('Error:', error));
-//     }
-// };
-
-
-//
-
-//
 // changeAction = () => {
 //     let currentAction = this.state.currentLogRegAction;
 //

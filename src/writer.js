@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './App.css';
+import {handleChangeEffect, postArticleEffect} from "./redux";
 
 class Writer extends Component {
+
     render() {
-        const { postArticle, title, text, handleChange, loggedIn } = this.props;
+        const doSth =()=> {
+            const title = this.props.title;
+            const text = this.props.text;
+            console.log(title, text)
+            this.props.postArticle({title: title, text: text})
+        };
 
         return (
             <div className="col-md-12 col-lg-6">
@@ -12,15 +20,42 @@ class Writer extends Component {
                     <h2>Write You own article</h2>
                     <form>
                         <input type="text" className="form-control" id="title" aria-label="Small" name="title"
-                               aria-describedby="inputGroup-sizing-sm" placeholder="Title*" value={title} onChange={e => handleChange(e)} />
+                               aria-describedby="inputGroup-sizing-sm" placeholder="Title*" onChange={e => this.props.handleChange(e)} />
                         <textarea className="form-control" id="content" name="text"
-                                  placeholder="Content goes here...*" value={text} onChange={e => handleChange(e)} />
+                                  placeholder="Content goes here...*" onChange={e => this.props.handleChange(e)} />
                     </form>
-                    <button className={(loggedIn ? "post" : "block") + " btn btn-primary btn-lg"} id="postArticles" onClick={()=> postArticle({title, text})}>Post article</button>
+                    <button className={(this.props.loggedIn ? "post" : "block") + " btn btn-primary btn-lg"} id="postArticles" onClick={doSth}>Post article</button>
                 </div>
             </div>
         )
     }
 }
 
-export default Writer;
+const mapStateToProps = (state) => {
+    return {
+        title: state.title,
+        text: state.text,
+        loggedIn: state.loggedIn
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleChange: (e) => {
+
+            let value = e.target.value;
+            dispatch(handleChangeEffect(value));
+
+            // if ((this.props.title != '' || this.props.text != '') && (e.target.name === 'title' || e.target.name === 'text')) {
+            //     currentState = 'writer'
+            // }
+
+        },
+        postArticle: (article) => {
+            console.log(article)
+            dispatch(postArticleEffect(article));
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Writer);

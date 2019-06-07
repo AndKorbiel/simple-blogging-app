@@ -20,7 +20,7 @@ class App extends Component {
                   <div className="container">
                       <div className="row">
                           <Reader />
-                          {/*<Writer />*/}
+                          <Writer />
                       </div>
                     <div className="row">
                         <Display   />

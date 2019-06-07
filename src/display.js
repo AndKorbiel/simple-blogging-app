@@ -6,10 +6,9 @@ class Display extends Component {
     render() {
 
         let content;
-        let displayMode = 'a';
 
-        if (displayMode === 'writer') {
-            content = <div> <h1>title</h1> <h5>text</h5></div>
+        if (this.props.displayMode === 'writer') {
+            content = <div> <h1>{this.props.title}</h1> <h5>{this.props.text}</h5></div>
         }
 
         else {
@@ -38,17 +37,24 @@ const mapStateToProps = (state) => {
     return {
         articlesInDatabase: state.articlesInDatabase,
         notification: state.notification,
-        status: state.status
+        status: state.status,
+        title: state.title,
+        content: state.content,
+        displayMode: state.displayMode
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getData: ()=> {
-            const action = { type: 'GET_DATA'};
-            dispatch(action)
-        }
-    }
-};
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         getData: ()=> {
+//             const action = { type: 'GET_DATA'};
+//             dispatch(action)
+//         },
+//         handleChange: ()=> {
+//             const action = { type: 'GET_DATA'};
+//             dispatch(action)
+//         }
+//     }
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Display);
+export default connect(mapStateToProps)(Display);
