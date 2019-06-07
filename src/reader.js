@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch) => {
         getData: ()=> dispatch(getDataEffect()),
         handleChange: (e) => {
 
-            let value = e.target.value;
+            let value = {value: e.target.value, name: e.target.name};
             dispatch(handleChangeEffect(value));
 
             // if ((this.props.title != '' || this.props.text != '') && (e.target.name === 'title' || e.target.name === 'text')) {

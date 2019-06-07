@@ -4,7 +4,8 @@ import thunk from 'redux-thunk';
 
 const GET_DATA = 'GET_DATA';
 const GET_DATA_ERROR = 'GET_DATA_ERROR';
-const HANDLE_CHANGE = 'HANDLE_CHANGE';
+const HANDLE_CHANGE_FROM_SEARCH = 'HANDLE_CHANGE_FROM_SEARCH';
+const HANDLE_CHANGE_FROM_WRITER = 'HANDLE_CHANGE_FROM_WRITER';
 const SEARCH = 'SEARCH';
 const SEARCH_EMPTY = 'SEARCH_EMPTY';
 const POST_ARTICLE = 'POST_ARTICLE';
@@ -30,14 +31,16 @@ const reducer = (state = initialState, action) => {
             return { ...state, articlesInDatabase: action.payload, notification: 'Data fetched!', status: 'Data fetched' };
         case GET_DATA_ERROR :
             return { ...state, notification: action.payload};
-        case HANDLE_CHANGE :
-            return { ...state, notification: action.payload, searchInput: action.payload};
+        case HANDLE_CHANGE_FROM_SEARCH :
+            return { ...state, notification: action.payload, searchInput: action.payload, displayMode: 'Search'};
+        case HANDLE_CHANGE_FROM_WRITER :
+            return { ...state, notification: 'Writing', title: action.payload.value, text: action.payload.value, displayMode: 'Writer'};
         case SEARCH :
             return {...state, articlesInDatabase: action.payload};
         case SEARCH_EMPTY :
             return {...state, notification: 'There isn\'t such article in our database'};
         case POST_ARTICLE :
-            return {...state, notification: 'Article posted', articlesInDatabase: action.payload};
+            return {...state, notification: 'Article posted', articlesInDatabase: action.payload, title: action.payload.title, text: action.payload.text};
         case POST_ARTICLE_ERROR :
             return {...state, notification: 'Please fill all matandory fileds' };
         default:
@@ -57,9 +60,15 @@ export const getDataError = (payload) => {
     }
 };
 
-export const handleChange = (payload) => {
+export const handleChangeFromSearch = (payload) => {
     return {
-        type: HANDLE_CHANGE, payload
+        type: HANDLE_CHANGE_FROM_SEARCH, payload
+    }
+};
+
+export const handleChangeFromWriter = (payload) => {
+    return {
+        type: HANDLE_CHANGE_FROM_WRITER, payload
     }
 };
 
@@ -100,7 +109,14 @@ export const getDataEffect = () => {
 };
 
 export const handleChangeEffect = (value) => {
-    return (dispatch) => { dispatch(handleChange(value)) }
+
+    if (value.name === 'searchInput') {
+        return (dispatch) => { dispatch(handleChangeFromSearch(value.value)) }
+    }
+    else {
+        return (dispatch) => { dispatch(handleChangeFromWriter(value.value)) }
+    }
+
 };
 
 export const searchEffect = (searchText) => {

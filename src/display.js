@@ -7,7 +7,7 @@ class Display extends Component {
 
         let content;
 
-        if (this.props.displayMode === 'writer') {
+        if (this.props.displayMode === 'Writer') {
             content = <div> <h1>{this.props.title}</h1> <h5>{this.props.text}</h5></div>
         }
 
