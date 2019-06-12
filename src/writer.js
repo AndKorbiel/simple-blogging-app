@@ -6,11 +6,10 @@ import {handleChangeEffect, postArticleEffect} from "./redux";
 class Writer extends Component {
 
     render() {
-        const doSth =()=> {
+        const callPosting =()=> {
             const title = this.props.title;
             const text = this.props.text;
-            console.log(title, text)
-            this.props.postArticle({title: title, text: text})
+            this.props.postArticle({title: title, content: text})
         };
 
         return (
@@ -24,7 +23,7 @@ class Writer extends Component {
                         <textarea className="form-control" id="content" name="text"
                                   placeholder="Content goes here...*" onChange={e => this.props.handleChange(e)} />
                     </form>
-                    <button className={(this.props.loggedIn ? "post" : "block") + " btn btn-primary btn-lg"} id="postArticles" onClick={doSth}>Post article</button>
+                    <button className={(this.props.loggedIn ? "post" : "block") + " btn btn-primary btn-lg"} disabled={!this.props.loggedIn} id="postArticles" onClick={callPosting}>Post article</button>
                 </div>
             </div>
         )
@@ -52,7 +51,6 @@ const mapDispatchToProps = (dispatch) => {
 
         },
         postArticle: (article) => {
-            console.log(article)
             dispatch(postArticleEffect(article));
         }
     }

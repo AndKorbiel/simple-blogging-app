@@ -12,11 +12,11 @@ class App extends Component {
 
 
   render() {
-      // const { displayMode, title, text, notification, articlesInDatabase, status, user, password, currentLogRegAction, loggedIn } = this.state;
+
       return (
           <Provider store={store}>
               <div className="App">
-                  {/*<TopBar />*/}
+                  <TopBar />
                   <div className="container">
                       <div className="row">
                           <Reader />

@@ -5,8 +5,9 @@ import './App.css';
 class Display extends Component {
     render() {
 
+        /* Is that part ok???? */
         let content;
-
+         
         if (this.props.displayMode === 'Writer') {
             content = <div> <h1>{this.props.title}</h1> <h5>{this.props.text}</h5></div>
         }
@@ -23,7 +24,7 @@ class Display extends Component {
                 })}
             </div>
         }
-
+        /* Until this */
         return (
             <div className=" col-md-12" id="screen">
                 <p className="notification">{this.props.notification}</p>
@@ -39,22 +40,10 @@ const mapStateToProps = (state) => {
         notification: state.notification,
         status: state.status,
         title: state.title,
+        text: state.text,
         content: state.content,
         displayMode: state.displayMode
     }
 };
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         getData: ()=> {
-//             const action = { type: 'GET_DATA'};
-//             dispatch(action)
-//         },
-//         handleChange: ()=> {
-//             const action = { type: 'GET_DATA'};
-//             dispatch(action)
-//         }
-//     }
-// };
 
 export default connect(mapStateToProps)(Display);
