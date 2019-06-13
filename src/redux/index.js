@@ -15,6 +15,7 @@ const HANDLE_CHANGE_FROM_WRITER_USER = 'HANDLE_CHANGE_FROM_WRITER_USER';
 const HANDLE_CHANGE_FROM_WRITER_PASSWORD = 'HANDLE_CHANGE_FROM_WRITER_PASSWORD';
 const CHANGE_LOG_REG_ACTION = 'CHANGE_LOG_REG_ACTION';
 const REGISTER = 'REGISTER';
+const REGISTER_ERROR = 'REGISTER_ERROR';
 const LOGIN = 'LOGIN';
 const LOGIN_ERROR = 'LOGIN_ERROR';
 
@@ -64,7 +65,9 @@ const reducer = (state = initialState, action) => {
                 return {...state, notification: 'action changed', currentLogRegAction: 'Register'};
             }
         case REGISTER :
-            return {...state, notification: 'New user has been registered!'};
+            return {...state, notification: 'New user has been registered'};
+        case REGISTER_ERROR :
+            return {...state, notification: 'User name is already taken'};
         case LOGIN :
             if (state.loggedIn) {
                 return {...state, notification: 'You have been logged out', loggedIn: false};
@@ -158,6 +161,12 @@ export const register = (payload) => {
     }
 };
 
+export const registerError = (payload) => {
+    return {
+        type: REGISTER_ERROR, payload
+    }
+};
+
 export const login = (payload) => {
     return {
         type: LOGIN, payload
@@ -232,17 +241,9 @@ export const searchEffect = (searchText) => {
 export const postArticleEffect = (postedData) => {
     return (dispatch) => {
 
-
-        // if (!this.state.loggedIn) {
-        //     this.setState({
-        //         notification: 'Please login to post article'
-        //     })
-        // }
-        //
         if (postedData.title == '' || postedData.content == '') {
             dispatch(dispatch(postArticleError()))
         }
-        // }
 
         else {
             fetch('http://localhost:8080/articles', {
@@ -279,11 +280,11 @@ export const registerEffect = (userData) => {
                 }
             })
                 .then((res) => {
-                    if (res.status == 200) {
+                    if (res.status == 201) {
+                        dispatch(dispatch(registerError()))
+                    }
+                    else if (res.status == 200) {
                         dispatch(dispatch(register(res.data)))
-                        // this.setState({
-                        //     notification: `User: ${this.state.user} is now registered`
-                        // })
                     }
                 })
                 .catch(error => console.error('Error:', error));

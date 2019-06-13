@@ -67,19 +67,29 @@ app.post('/articles', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    let query = `INSERT INTO users SET ?`;
+    let user = req.body.user;
 
-    db.query(query, req.body, (err, result) => {
-        if (err) { return res.status(500).send(err) }
-        else { res.send('User registered') }
-    })
+    db.query('SELECT * FROM users WHERE user = ? ', user, (err, result) => {
+        if (result.length > 0) {
+            res.statusMessage = "User name is taken";
+            res.status(201).end()
+        }
+        else {
+            let query = `INSERT INTO users SET ?`;
+
+            db.query(query, req.body, (err, result) => {
+                if (err) { return res.status(500).send(err) }
+                else { res.send('User registered') }
+            })
+        }
+    });
+
 });
 
 app.post('/login', (req, res) => {
     let user = req.body.user;
     let password = req.body.password;
 
-    console.log(user, password)
     let query = `SELECT * FROM users WHERE user = ?  AND password = ?`;
 
     db.query(query, [user, password], (err, result) => {

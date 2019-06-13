@@ -41,7 +41,7 @@ class TopBar extends Component {
             content = <div> <p onClick={changeAction}><span className={this.props.currentLogRegAction === 'Register' ? 'active' : ''}>Register</span> <span className={this.props.currentLogRegAction === 'Login' ? 'active' : ''}>Login</span></p>
                 <input type="text" className="form-control" id="user" aria-label="Small" name="user"
             aria-describedby="inputGroup-sizing-sm" placeholder="Username..." onChange={e => this.props.handleChange(e)} />
-            <input type="text" className="form-control" id="password" aria-label="Small" name="password"
+            <input type="text" className="form-control" id="password" aria-label="Small" name="password" type="password"
                    aria-describedby="inputGroup-sizing-sm" placeholder="Password..." onChange={e => this.props.handleChange(e)} />
             <button className="btn btn-primary md" id="login" onClick={callRegisterOrLogin}>{this.props.currentLogRegAction}</button>
             </div>
