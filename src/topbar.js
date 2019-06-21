@@ -7,46 +7,6 @@ class TopBar extends Component {
 
     render() {
 
-        let action;
-        let content;
-
-        const changeAction =()=> {
-            if (this.props.currentLogRegAction === 'Register') {
-                action = 'Login';
-            }
-            else {
-                action = 'Register';
-            }
-            this.props.changeLogRegAction(action)
-        };
-
-        const callRegisterOrLogin =()=> {
-            const user = this.props.user;
-            const password = this.props.password;
-
-            if (this.props.currentLogRegAction === 'Register') {
-                this.props.register({user: user, password: password})
-            }
-            else {
-                this.props.login({user: user, password: password})
-            }
-
-        };
-
-        if (this.props.loggedIn) {
-            content = <div className="align-right"> <button className="btn btn-primary md" id="login" onClick={callRegisterOrLogin}>Logout</button> </div>
-        }
-
-        else {
-            content = <div> <p onClick={changeAction}><span className={this.props.currentLogRegAction === 'Register' ? 'active' : ''}>Register</span> <span className={this.props.currentLogRegAction === 'Login' ? 'active' : ''}>Login</span></p>
-                <input type="text" className="form-control" id="user" aria-label="Small" name="user"
-            aria-describedby="inputGroup-sizing-sm" placeholder="Username..." onChange={e => this.props.handleChange(e)} />
-            <input type="text" className="form-control" id="password" aria-label="Small" name="password" type="password"
-                   aria-describedby="inputGroup-sizing-sm" placeholder="Password..." onChange={e => this.props.handleChange(e)} />
-            <button className="btn btn-primary md" id="login" onClick={callRegisterOrLogin}>{this.props.currentLogRegAction}</button>
-            </div>
-        }
-
         return (
             <div className="topbar">
                 <div className="container">
@@ -55,13 +15,42 @@ class TopBar extends Component {
                             <p><span className="info">{this.props.currentLogRegAction}</span></p>
                         </div>
                         <div className="col-sm-12 col-md-8 fields">
-                            {content}
+                            {this.renderContent()}
                         </div>
                     </div>
                 </div>
             </div>
         )
     }
+
+    renderContent = () => {
+        if (this.props.loggedIn) {
+            return <div className="align-right"> <button className="btn btn-primary md" id="login" onClick={this.callRegisterOrLogin}>Logout</button> </div>
+        }
+
+        return (
+            <div> <p onClick={this.props.changeLogRegAction}><span className={this.props.currentLogRegAction === 'Register' ? 'active' : ''}>Register</span> <span className={this.props.currentLogRegAction === 'Login' ? 'active' : ''}>Login</span></p>
+                <input type="text" className="form-control" id="user" aria-label="Small" name="user"
+            aria-describedby="inputGroup-sizing-sm" placeholder="Username..." onChange={this.props.handleChange} />
+            <input type="text" className="form-control" id="password" aria-label="Small" name="password" type="password"
+                   aria-describedby="inputGroup-sizing-sm" placeholder="Password..." onChange={this.props.handleChange} />
+            <button className="btn btn-primary md" id="login" onClick={this.callRegisterOrLogin}>{this.props.currentLogRegAction}</button>
+            </div>
+        )
+    }
+
+    callRegisterOrLogin =()=> {
+        const user = this.props.user;
+        const password = this.props.password;
+
+        if (this.props.currentLogRegAction === 'Register') {
+            this.props.register({user: user, password: password})
+        }
+        else {
+            this.props.login({user: user, password: password})
+        }
+
+    };
 }
 
 const mapStateToProps = (state) => {

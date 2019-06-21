@@ -1,8 +1,9 @@
 import { applyMiddleware, createStore } from 'redux';
 import axios from 'axios';
 import thunk from 'redux-thunk';
+import { GET_DATA } from './actions';
 
-const GET_DATA = 'GET_DATA';
+// const GET_DATA = 'GET_DATA';
 const GET_DATA_ERROR = 'GET_DATA_ERROR';
 const HANDLE_CHANGE_FROM_SEARCH = 'HANDLE_CHANGE_FROM_SEARCH';
 const SEARCH = 'SEARCH';
@@ -83,11 +84,11 @@ const reducer = (state = initialState, action) => {
     }
 };
 
-export const getData = (payload) => {
-    return {
-        type: GET_DATA, payload
-    }
-};
+// export const getData = (payload) => {
+//     return {
+//         type: GET_DATA, payload
+//     }
+// };
 
 export const getDataError = (payload) => {
     return {
@@ -178,18 +179,18 @@ export const loginError = (payload) => {
     }
 };
 
-/* Side effects actions */
-export const getDataEffect = () => {
-    return (dispatch) => {
-        axios.get('http://localhost:8080/articles')
-                .then((res) => {
-                    dispatch(getData(res.data));
-                })
-                .catch((err) => {
-                    dispatch(getDataError(err));
-                })
-    }
-};
+// /* Side effects actions */
+// export const getDataEffect = () => {
+//     return (dispatch) => {
+//         axios.get('http://localhost:8080/articles')
+//                 .then((res) => {
+//                     dispatch(getData(res.data));
+//                 })
+//                 .catch((err) => {
+//                     dispatch(getDataError(err));
+//                 })
+//     }
+// };
 
 export const handleChangeEffect = (value) => {
 
@@ -264,7 +265,8 @@ export const postArticleEffect = (postedData) => {
     }
 };
 
-export const registerEffect = (userData) => {
+export const registerEffect = () => {
+    const userData = store.getState()
     return (dispatch) => {
 
         if (userData.user == '' || userData.password == '') {
@@ -292,7 +294,8 @@ export const registerEffect = (userData) => {
     }
 };
 
-export const loginEffect = (userData) => {
+export const loginEffect = () => {
+    const userData = store.getState()
     return (dispatch) => {
 
             fetch('http://localhost:8080/login', {
@@ -318,9 +321,17 @@ export const loginEffect = (userData) => {
         }
 };
 
-export const changeLogRegActionEffect = (currentAction) => {
+export const changeLogRegActionEffect = () => {
+    const currentAction = store.getState().currentLogRegAction
+
+    let action = 'Register';
+
+    if (currentAction === 'Register') {
+        action = 'Login';
+    }
+    
     return (dispatch) => {
-            dispatch(dispatch(changeLogRegAction(currentAction)))
+            dispatch(dispatch(changeLogRegAction(action)))
     }
 };
 

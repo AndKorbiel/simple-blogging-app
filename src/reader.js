@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import "./App.css";
-import {getDataEffect, handleChangeEffect, searchEffect} from './redux';
+import { handleChangeEffect, searchEffect } from './redux';
+import { getDataEffect } from './redux/effects';
 
 class Reader extends  Component {
 
