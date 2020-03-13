@@ -1,5 +1,6 @@
 {
   "name": "blo-app",
+  "homepage": "https://andkorbiel.github.io/simple-blogging-app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,11 +9,12 @@
     "bootstrap": "^4.3.1",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "gh-pages": "^2.2.0",
     "mysql": "^2.17.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
-    "react-scripts": "3.0.0",
+    "react-scripts": "^3.4.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0"
   },
@@ -20,7 +22,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
